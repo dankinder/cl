@@ -4,27 +4,27 @@ Usage: cl [options...] <column_indexes...>
 
 Examples:
 
-        Filter a simple table of data for the second column:
-        $ echo "1 2 3
-        > 4 5 6
-        > 7 8 9" | cl 2
-        2
-        5
-        8
+	Filter a simple table of data for the second column:
+	$ echo "1 2 3
+	> 4 5 6
+	> 7 8 9" | cl 2
+	2
+	5
+	8
 
-        Grab a list of process IDs from ps, ignoring the header row (-i):
-        $ ps | cl 1 -i
-        7958
-        29855
+	Grab a list of process IDs from ps, ignoring the header row (-i):
+	$ ps | cl 1 -i
+	7958
+	29855
 
-        Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
-        $ netstat | cl 3 -t
+	Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
+	$ netstat | cl 3 -t
 
-		Or the first 2 columns:
-		$ netstat | cl 1 2 -t
+	Or the first 2 columns:
+	$ netstat | cl 1 2 -t
 
-		Or the first 4 columns (in bash):
-		$ netstat | cl {1..4} -t
+	Or the first 4 columns (in bash):
+	$ netstat | cl {1..4} -t
 
 Options:
   -i    ignore the header row (first row)
@@ -124,6 +124,11 @@ func run() int {
 			return 1
 		}
 		columns[c] = struct{}{}
+	}
+
+	if len(columns) == 0 {
+		flag.Usage()
+		os.Exit(1)
 	}
 
 	// Figure out how to separate columns
