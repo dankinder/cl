@@ -1,9 +1,36 @@
 /* Cl is a tool for filtering data by columns on the command line.
 
-Usage:
+Usage: cl [options...] <column_indexes...>
 
-TODO
+Examples:
 
+        Filter a simple table of data for the second column:
+        $ echo "1 2 3
+        > 4 5 6
+        > 7 8 9" | cl 2
+        2
+        5
+        8
+
+        Grab a list of process IDs from ps, ignoring the header row (-i):
+        $ ps | cl 1 -i
+        7958
+        29855
+
+        Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
+        $ netstat | cl 3 -t
+
+		Or the first 2 columns:
+		$ netstat | cl 1 2 -t
+
+		Or the first 4 columns (in bash):
+		$ netstat | cl {1..4} -t
+
+Options:
+  -i    ignore the header row (first row)
+  -s string
+        a character or regex to split lines (default: whitespace)
+  -t    use tabs as separator (alias of -s \t)
 */
 package main
 
@@ -21,6 +48,7 @@ import (
 // Flag definitions
 var separator string
 var useTabSeparator bool
+var ignoreHeaderRow bool
 
 // Use local variables and Reader/Writer interfaces so we can substitute these for testing
 var stdin io.Reader
@@ -31,6 +59,41 @@ var exitFunc func(int)
 func init() {
 	flag.StringVar(&separator, "s", "", "a character or regex to split lines (default: whitespace)")
 	flag.BoolVar(&useTabSeparator, "t", false, "use tabs as separator (alias of -s \\t)")
+	flag.BoolVar(&ignoreHeaderRow, "i", false, "ignore the header row (first row)")
+
+	flag.Usage = func() {
+		fmt.Printf(`Usage: cl [options...] <column_indexes...>
+
+cl is a tool for filtering data by columns on the command line.
+
+Examples:
+
+	Filter a simple table of data for the second column:
+	$ echo "1 2 3
+	> 4 5 6
+	> 7 8 9" | cl 2
+	2
+	5
+	8
+
+	Grab a list of process IDs from ps, ignoring the header row (-i):
+	$ ps | cl 1 -i
+	7958
+	29855
+
+	Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
+	$ netstat | cl 3 -t
+
+	Or the first 2 columns:
+	$ netstat | cl 1 2 -t
+
+	Or the first 4 columns (in bash):
+	$ netstat | cl {1..4} -t
+
+Options:
+`)
+		flag.PrintDefaults()
+	}
 
 	stdin = os.Stdin
 	stdout = os.Stdout
@@ -87,9 +150,14 @@ func run() int {
 
 	// Scan and split
 	//
-
+	firstRow := true
 	scanner := bufio.NewScanner(stdin)
 	for scanner.Scan() {
+		if firstRow && ignoreHeaderRow {
+			firstRow = false
+			continue
+		}
+
 		var fields []string
 		if separatorRegex == nil {
 			fields = strings.Fields(scanner.Text())

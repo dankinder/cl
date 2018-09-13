@@ -38,6 +38,11 @@ func RunTest(t *testing.T, test Test) {
 		exitCode = code
 	}
 
+	// Unfortunately the flag library may leave these set to a previous value, so we need to zero them out
+	separator = ""
+	useTabSeparator = false
+	ignoreHeaderRow = false
+
 	main()
 	assert.Equal(t, test.ExpOutput, stdout.(*strings.Builder).String())
 	assert.Equal(t, test.ExpErrout, stderr.(*strings.Builder).String())
@@ -72,4 +77,8 @@ func TestInvalidColumn(t *testing.T) {
 
 func TestTabSeparatorBasic(t *testing.T) {
 	RunTest(t, Test{Args: []string{"-t", "2"}, Input: "a\t b \n e\tf", ExpOutput: " b \nf\n"})
+}
+
+func TestIgnoreHeaderRow(t *testing.T) {
+	RunTest(t, Test{Args: []string{"-i", "2"}, Input: "a\tb\ne\tf", ExpOutput: "f\n"})
 }
