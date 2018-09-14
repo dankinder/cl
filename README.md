@@ -5,7 +5,7 @@ Usage: `cl [options...] <column_indexes...>`
 
 Examples:
 ```bash
-Filter a simple table of data for the second column:
+# Filter a simple table of data for the second column:
 $ echo "1 2 3
 > 4 5 6
 > 7 8 9" | cl 2
@@ -13,18 +13,18 @@ $ echo "1 2 3
 5
 8
 
-Grab a list of process IDs from ps, ignoring the header row (-i):
+# Grab a list of process IDs from ps, ignoring the header row (-i):
 $ ps | cl 1 -i
 7958
 29855
 
-Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
+# Grab the third column of output when there may be spaces, in values, and tabs are the separator (-t):
 $ netstat | cl 3 -t
 
-Or the first 2 columns:
+# Or the first 2 columns:
 $ netstat | cl 1 2 -t
 
-Or the first 4 columns (in bash):
+# Or the first 4 columns (in bash):
 $ netstat | cl {1..4} -t
 ```
 
@@ -71,7 +71,7 @@ function ih() {
 ```
 
 Further, some tools worked around this specific problem by building another
-tool (`pgrep`). So, to grep for process IDs we now need to learn another tool.
+tool (`pgrep`) giving us yet another command to learn.
 
 It felt to me like we need a small, simple, generalized tool for this task.
 
