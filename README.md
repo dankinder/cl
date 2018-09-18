@@ -1,5 +1,9 @@
 Cl is a tool for filtering data by columns on the command line.
 
+<a href="https://godoc.org/github.com/dankinder/cl"><img src="https://godoc.org/github.com/dankinder/cl?status.svg" alt="GoDoc" /></a>
+<a href="https://goreportcard.com/report/github.com/dankinder/cl"><img src="https://goreportcard.com/badge/github.com/dankinder/cl" alt="Go Report Card" /></a>
+<a href="https://travis-ci.org/dankinder/cl"><img src="https://travis-ci.org/dankinder/cl.svg?branch=master" alt="Build Status" /></a>
+
 # What it does
 Usage: `cl [options...] <column_indexes...>`
 
