@@ -174,13 +174,13 @@ func run() int {
 		for i, f := range fields {
 			if _, exists := columns[int64(i+1)]; exists {
 				if printedFirstColumn {
-					fmt.Fprintf(stdout, "\t")
+					fmt.Fprint(stdout, "\t")
 				}
 				printedFirstColumn = true
-				fmt.Fprintf(stdout, f)
+				fmt.Fprint(stdout, f)
 			}
 		}
-		fmt.Fprintf(stdout, "\n")
+		fmt.Fprint(stdout, "\n")
 	}
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintf(stderr, "ERROR: failed to read input: %v\n", err)
